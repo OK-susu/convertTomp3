@@ -9,7 +9,7 @@ app = FastAPI()
 @app.get("/download")
 def download_mp3(url: str = Query(...)):
     os.makedirs("downloads", exist_ok=True)
-
+    
     ffmpeg_path = os.path.join(os.path.dirname(__file__), "bin", "ffmpeg")
 
     ydl_opts = {
@@ -26,6 +26,7 @@ def download_mp3(url: str = Query(...)):
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
+        
         filename = ydl.prepare_filename(info).rsplit('.', 1)[0] + '.mp3'
         return FileResponse(path=filename, filename=os.path.basename(filename), media_type='audio/mpeg')
 
