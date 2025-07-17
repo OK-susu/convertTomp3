@@ -10,7 +10,7 @@ app = FastAPI()
 def download_mp3(url: str = Query(...)):
     os.makedirs("downloads", exist_ok=True)
 
-    ffmpeg_path = "/usr/bin/ffmpeg"  # Render에서 apt로 설치한 위치
+    ffmpeg_path = os.path.join(os.path.dirname(__file__), "bin", "ffmpeg")
 
     ydl_opts = {
         'format': 'bestaudio/best',
