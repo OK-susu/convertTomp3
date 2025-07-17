@@ -9,15 +9,14 @@ app = FastAPI()
 
 @app.get("/download")
 def download_mp3(url: str = Query(...)):
-    # 실행파일 내부일 경우 _MEIPASS 사용
+
     if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
+        # 빌드된 .exe 실행 중일 때: 현재 실행파일 기준 경로
+        base_path = os.path.dirname(sys.executable)
     else:
         base_path = os.path.dirname(__file__)
 
-    # ffmpeg 경로 지정 (Windows용 ffmpeg.exe 포함)
     ffmpeg_path = os.path.join(base_path, "bin", "ffmpeg.exe")
-
     # 다운로드 폴더 생성
     os.makedirs("downloads", exist_ok=True)
 
