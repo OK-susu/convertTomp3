@@ -43,9 +43,10 @@ jobs:
       - name: Create ZIP package
         run: |
           mkdir package
+          mkdir package\bin
           copy dist\main.exe package\
-          copy bin\ffmpeg.exe package\
-          copy bin\ffprobe.exe package\
+          copy bin\ffmpeg.exe package\bin\
+          copy bin\ffprobe.exe package\bin\
           powershell Compress-Archive -Path package\* -DestinationPath release.zip
       
       - name: Upload ZIP to release
