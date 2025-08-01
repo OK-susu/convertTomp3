@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>MP3 변환기 다운로드</title>
+</head>
+<body>
+    <h2>MP3 변환기 다운로드</h2>
+
+    <!-- .exe 다운로드 -->
+    <label for="version">버전 입력 (예: 2025.7.17):</label>
+    <input type="text" id="version" placeholder="예: 2025.7.17" />
+    <button onclick="downloadExe()">.exe 다운로드</button>
+
+    <hr>
+
+    <!-- MP3 변환 요청 -->
+    <label for="ytUrl">YouTube URL 입력:</label>
+    <input type="text" id="ytUrl" placeholder="https://www.youtube.com/watch?v=..." />
+    <button onclick="requestDownload()">MP3 변환 요청</button>
+
+    <script>
+        function downloadExe() {
+            const input = document.getElementById('version').value.trim();
+            const version = input || '2025.8.1';
+            
+            const url = `https://github.com/OK-susu/convertTomp3/archive/refs/tags/v${version}.zip`;
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'main.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        async function requestDownload() {
+            const ytUrl = document.getElementById('ytUrl').value.trim();
+            if (!ytUrl) {
+                alert("YouTube URL을 입력해주세요.");
+                return;
+            }
+
+            try {
+                // FastAPI 서버가 켜져 있어야 동작합니다
+                const encodedUrl = encodeURIComponent(ytUrl);
+                const serverUrl = `http://localhost:8000/download?url=${encodedUrl}`;
+
+                // 직접 브라우저에서 다운로드 유도
+                const a = document.createElement('a');
+                a.href = serverUrl;
+                a.download = ''; // 서버에서 파일명 지정
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (err) {
+                alert("MP3 요청 중 오류가 발생했습니다.");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
