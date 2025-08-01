@@ -39,3 +39,20 @@ jobs:
             bin/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create ZIP package
+        run: |
+          mkdir package
+          copy dist\main.exe package\
+          copy bin\ffmpeg.exe package\
+          copy bin\ffprobe.exe package\
+          powershell Compress-Archive -Path package\* -DestinationPath release.zip
+      
+      - name: Upload ZIP to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
